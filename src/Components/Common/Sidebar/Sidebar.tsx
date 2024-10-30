@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
-import CustomKeyboard from "../CustomKeyboard";
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {activeInputAtom, showKeyboardAtom} from '../../recoil/atoms';
+import {useRecoilState, } from 'recoil';
+import { showKeyboardAtom} from '../../recoil/atoms';
 
 const LayoutContainer = styled.div`
     display: flex;
@@ -60,7 +59,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { pathname } = useLocation();
-    const [showKeyboard, setShowKeyboard] = useRecoilState(showKeyboardAtom); // recoil 상태 사용
+    const [, setShowKeyboard] = useRecoilState(showKeyboardAtom); // recoil 상태 사용
     const toggleSidebar = () => setIsOpen(!isOpen);
 
     const handleCloseKeyboardAndBlur = (event: React.MouseEvent) => {

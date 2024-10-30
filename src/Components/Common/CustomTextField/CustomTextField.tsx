@@ -2,6 +2,7 @@ import React, { useRef, useState, useLayoutEffect } from 'react';
 import { TextField, TextFieldProps, Box } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { activeInputAtom } from '../../recoil/atoms';
+// @ts-ignore
 import CustomKeyboard from '../CustomKeyboard';
 import { keyframes } from '@mui/system';
 
@@ -11,6 +12,7 @@ const blink = keyframes`
     100% { opacity: 1; }
 `;
 
+// @ts-ignore
 interface CustomTextFieldProps extends TextFieldProps {
     fieldName: string;
     value: string;

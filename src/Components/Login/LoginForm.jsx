@@ -20,7 +20,7 @@ const LoginForm = () => {
     const navi = useNavigate();
 
 
-    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = (e) => {
         e.preventDefault();
         console.log('로그인 시도:', email, password);
         setError('잘못된 이메일 또는 비밀번호입니다.');
