@@ -31,9 +31,7 @@ const LoginForm = () => {
 
     // `useLayoutEffect`를 사용하여 활성화된 필드에 포커스를 강제로 유지
     const inputRef = useRef<HTMLInputElement>(null);
-    useLayoutEffect(() => {
-        if (inputRef.current !== null) inputRef.current.focus();
-    });
+
 
     return (
         <ThemeProvider theme={theme}>

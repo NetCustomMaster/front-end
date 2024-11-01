@@ -11,7 +11,7 @@ const LayoutContainer = styled.div`
 `;
 
 const SidebarContainer = styled.div<{ $isOpen: boolean; $isVisible: boolean }>`
-    width: ${(props) => (props.$isOpen ? "250px" : props.$isVisible ? "70px" : "0px")};
+    width: ${(props) => (props.$isOpen ? "180px" : props.$isVisible ? "50px" : "0px")};
     background-color: #333;
     color: #fff;
     transition: width 0.3s;
@@ -23,9 +23,11 @@ const SidebarContainer = styled.div<{ $isOpen: boolean; $isVisible: boolean }>`
 
 const MainContentContainer = styled.div<{ $isOpen: boolean; $isVisible: boolean }>`
     flex-grow: 1;
-    margin-left: ${(props) => (props.$isOpen ? "250px" : props.$isVisible ? "70px" : "0px")};
+    margin-left: ${(props) => (props.$isOpen ? "10px" : props.$isVisible ? "0px" : "0px")};
     transition: margin-left 0.3s;
-    padding: 20px;
+    height:480px;
+    padding-left:10px;
+    overflow-y:auto;
 `;
 
 const ToggleButton = styled.button`
@@ -80,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                 </ToggleButton>
                 <Menu>
                     <MenuItem>
-                        <Link to="/dashboard">Home</Link>
+                        <Link to="/dashboard"> {isOpen?"🏠 Home":"🏠"}  </Link>
                     </MenuItem>
                     <MenuItem>
                         <Link to="/about">About</Link>

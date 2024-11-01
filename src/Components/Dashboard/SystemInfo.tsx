@@ -4,7 +4,6 @@ const SystemInfo = () => {
     const [systemInfo, setSystemInfo] = useState({
         cpuUsage: '',
         memoryUsage: '',
-        internetSpeed: ''
     });
 
     useEffect(() => {
@@ -17,7 +16,6 @@ const SystemInfo = () => {
             setSystemInfo({
                 cpuUsage: data.cpuUsage,
                 memoryUsage: data.memoryUsage,
-                internetSpeed: data.internetSpeed,
             });
         };
 
@@ -37,7 +35,6 @@ const SystemInfo = () => {
             <h3>System Information</h3>
             <p>CPU Usage: {systemInfo.cpuUsage}</p>
             <p>Memory Usage: {systemInfo.memoryUsage}</p>
-            <p>Internet Speed: {systemInfo.internetSpeed}</p>
         </div>
     );
 };
