@@ -1,4 +1,4 @@
-import  { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const SystemInfo = () => {
     const [systemInfo, setSystemInfo] = useState({
@@ -8,20 +8,20 @@ const SystemInfo = () => {
     });
 
     const [internetSpeed, setInternetSpeed] = useState('');
-    const [, setError] = useState(null);
-    const [isConnected, setIsConnected] = useState(true); // 연결 상태 관리
-    const eventSourceRef = useRef(null); // EventSource를 위한 ref
+    const [error, setError] = useState<string | null>(null);
+    const [isConnected, setIsConnected] = useState(true);
+
+    // EventSource 타입을 명시적으로 설정
+    const eventSourceRef = useRef<EventSource | null>(null);
 
     useEffect(() => {
         const createEventSource = () => {
-            // 기존 EventSource가 존재하면 종료
             if (eventSourceRef.current) {
                 eventSourceRef.current.close();
             }
 
             const eventSource = new EventSource('http://taka535.duckdns.org:9090/api/v1/state/resource');
-            // @ts-ignore
-            eventSourceRef.current = eventSource; // ref에 저장
+            eventSourceRef.current = eventSource;
 
             eventSource.onmessage = (event) => {
                 try {
@@ -33,31 +33,31 @@ const SystemInfo = () => {
                         connectedDevices: data.connectedDevices,
                     });
                     setError(null); // 에러 상태 초기화
-                    setIsConnected(true); // 연결 상태 갱신
-                } catch (e) {
-                    // @ts-ignore
-                    setError('Error parsing data: ' ,e.message);
+                    setIsConnected(true);
+                } catch (e: any) {
+                    setError(`Error parsing data: ${e.message}`);
                 }
             };
 
             eventSource.onerror = () => {
-                setIsConnected(false); // 연결 실패 시 상태 업데이트
+                setIsConnected(false);
                 console.log('Connection failed, trying to reconnect...');
-                eventSource.close(); // 현재 연결 종료
+                if (eventSourceRef.current) {
+                    eventSourceRef.current.close();
+                }
 
-                // 재연결 로직
                 setTimeout(() => {
                     console.log('Reconnecting...');
-                    createEventSource(); // 새로운 EventSource 생성
-                }, 5000); // 5초 후 재연결 시도
+                    createEventSource();
+                }, 5000);
             };
         };
 
-        createEventSource(); // 처음에 이벤트 소스 생성
+        createEventSource();
 
         return () => {
             if (eventSourceRef.current) {
-                eventSourceRef.current.close(); // 컴포넌트 언마운트 시 이벤트 소스 종료
+                eventSourceRef.current.close();
             }
         };
     }, []);
@@ -70,9 +70,8 @@ const SystemInfo = () => {
             }
             const data = await response.json();
             setInternetSpeed(data.internetSpeed);
-        } catch (error) {
-            // @ts-ignore
-            setError('Error fetching internet speed: ',error.message);
+        } catch (error: any) {
+            setError(`Error fetching internet speed: ${error.message}`);
         }
     };
 
@@ -89,7 +88,8 @@ const SystemInfo = () => {
                     : 'No connected devices'}
             </p>
             <button onClick={fetchInternetSpeed}>Fetch Internet Speed</button>
-            {!isConnected && <p>Reconnecting to server...</p>} {/* 재연결 상태 표시 */}
+            {!isConnected && <p>Reconnecting to server...</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };
