@@ -1,7 +1,7 @@
 import {Box, Card, Typography} from "@mui/material";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
-export const TraficCheck = () => {
+export const TrafficCheck = ({name,ether}) => {
     const data = [
         { name: '10:00', up: 50, down: 30, amt: 20 },
         { name: '10:05', up: 70, down: 45, amt: 40 },
@@ -16,7 +16,7 @@ export const TraficCheck = () => {
 
             <Card sx={{ padding: "16px", boxShadow: 3, marginTop: "10px", background: "#f8f5fb" ,marginRight:"5px"}}>
                 <Typography sx={{ fontWeight: "500", fontSize: "16px" }}>
-                    기기명: sm-s24
+                    기기명: {name} / {ether}
                 </Typography>
                 <Box sx={{ width: "100%", height: 200, mt: 2, marginLeft:"-30px" }}>
                     <ResponsiveContainer width="115%" height="100%">
@@ -42,3 +42,5 @@ export const TraficCheck = () => {
             </Card></>
     );
 };
+
+export default TrafficCheck;

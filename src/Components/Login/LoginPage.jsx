@@ -1,6 +1,6 @@
 // @ts-ignore
 import LoginForm from "./LoginForm.jsx";
-import Sidebar from "../Common/Sidebar/Sidebar.tsx";
+import Sidebar from "../Common/Sidebar/Sidebar.jsx";
 
 export const  LoginPage= () => {
     return (
