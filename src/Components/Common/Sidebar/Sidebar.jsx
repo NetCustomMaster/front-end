@@ -5,6 +5,9 @@ import { useRecoilState } from 'recoil';
 import { showKeyboardAtom } from '../../recoil/atoms.jsx';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import {Box} from "@mui/material";
 const LayoutContainer = styled.div`
     display: flex;
     height: 100vh;
@@ -89,19 +92,21 @@ const Sidebar = ({ children }) => {
       <LayoutContainer>
           <SidebarContainer $isOpen={isOpen} $isVisible={(pathname!== "/" && pathname !=="/regist")}>
               <ToggleButton onClick={toggleSidebar} $isOpen={isOpen}>
-                  {isOpen ? "⬅️" : "➡️"}
+                  <MenuIcon sx={{marginLeft:"-10px"}}/>
               </ToggleButton>
               <Menu>
                   <MenuItem>
-                      <div onClick={()=>navi("/dashboard")}> {isOpen ? "🏠 Home" : "🏠"} </div>
+                      <div onClick={()=>navi("/dashboard")}> {isOpen ? <Box sx={{display:"flex"}}><HomeIcon sx={{marginRight:"5px"}}/>
+
+                          Home</Box> :<HomeIcon/>} </div>
                   </MenuItem>
                   <MenuItem>
-                      <div onClick={()=>navi("/setting")}>{isOpen ? <><SettingsIcon />
-                          setting</>: <SettingsIcon/>}</div>
+                      <div onClick={()=>navi("/setting")}>{isOpen ? <Box sx={{display:"flex"}}><SettingsIcon  sx={{marginRight:"5px"}}/>
+                          setting</Box>: <SettingsIcon/>}</div>
                   </MenuItem>
                   <MenuItem>
-                      <div onClick={()=>navi("/chatbot")}>{isOpen ? <><HelpIcon/>
-                          Help</>: <HelpIcon/>}</div>
+                      <div onClick={()=>navi("/chatbot")}>{isOpen ? <Box sx={{display:"flex"}}><HelpIcon sx={{marginRight:"5px"}}/>
+                          Help</Box>: <HelpIcon/>}</div>
                   </MenuItem>
               </Menu>
           </SidebarContainer>
