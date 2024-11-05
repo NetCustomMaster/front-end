@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
-import { KoreanLayout, EnglishLayout } from "./Layouts";
+import { KoreanLayout, EnglishLayout } from "./Layouts.jsx";
 import { Box, styled } from "@mui/material";
 import hangul from "hangul-js";
 
