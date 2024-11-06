@@ -50,7 +50,7 @@ export const Setting = () => {
   const updateBand = async () => {
     try {
       const response = await axios.patch(`${url}/api/v1/setting/band`, { band });
-      console.log(response.data);
+      console.log(response.data,"data");
     } catch (error) {
       alert("대역폭 설정 중 오류 발생");
       console.error(error);
@@ -74,7 +74,7 @@ export const Setting = () => {
       try {
         const response = await axios.get(`${url}/api/v1/setting/band`);
         setBand(response.data.toString()); // 현재 설정된 대역폭 값을 상태에 저장
-        console.log(response.data);
+        console.log(response.data,"data");
       } catch (error) {
         console.error("대역폭 정보 가져오기 중 오류 발생:", error);
       }
@@ -190,11 +190,11 @@ export const Setting = () => {
                 row
                 aria-label="bandwidth"
                 name="band"
-                value={band} // 현재 대역폭 설정값에 따라 체크
+               
                 onChange={(e) => setBand(e.target.value)} // 선택 변경 시 band 상태 업데이트
               >
-                <FormControlLabel value="2" control={<Radio />} label="2.4Ghz" />
-                <FormControlLabel value="5" control={<Radio />} label="5Ghz" />
+                <FormControlLabel value="2" control={<Radio />} label="2.4Ghz" checked={band==="2"}/>
+                <FormControlLabel value="5" control={<Radio />} label="5Ghz" checked={band==="5"}/>
               </RadioGroup>
             </FormControl>
           </Grid>
