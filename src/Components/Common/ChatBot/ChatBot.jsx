@@ -76,13 +76,13 @@ const Chatbot = () => {
             </div>
           ))}
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center",justifyContent:"center",width:"100%" }}>
           <CustomTextField
             type="text"
             value={userMessage}
             setValue={setUserMessage}
             placeholder="Type your message..."
-            style={{ width: '650px', marginRight: '10px' }}
+            style={{ width: '600px', marginRight: '10px' }}
           />
           <Button onClick={handleSendMessage} variant="contained" sx={{ paddingTop:"15px", paddingBottom:"15px" }}>검색</Button>
         </Box>
