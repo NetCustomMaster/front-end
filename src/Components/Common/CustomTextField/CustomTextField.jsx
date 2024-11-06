@@ -48,25 +48,7 @@ const CustomTextField = ({
             onBlur={handleBlur}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            sx={{
-                '& .MuiOutlinedInput-root': {
-                    position: 'relative',
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'primary.main',
-                        borderWidth: '2px',
-                    },
-                    '&::after': {
-                        content: "''",
-                        position: 'absolute',
-                        right: 0,
-                        width: '2px',
-                        height: '100%',
-                        backgroundColor: 'black',
-                        animation: `${blink} 1s infinite`,
-                        visibility: activeInput === fieldName ? 'visible' : 'hidden',
-                    },
-                },
-            }}
+
           />
           {showKeyboard && (
             <Box

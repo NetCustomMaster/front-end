@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useRecoilState } from 'recoil';
@@ -8,6 +8,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import {Box} from "@mui/material";
+import axios, {Axios} from "axios";
 const LayoutContainer = styled.div`
     display: flex;
     height: 100vh;
@@ -88,6 +89,7 @@ const Sidebar = ({ children }) => {
         }
     };
 
+
     return (
       <LayoutContainer>
           <SidebarContainer $isOpen={isOpen} $isVisible={(pathname!== "/" && pathname !=="/regist")}>
@@ -114,7 +116,7 @@ const Sidebar = ({ children }) => {
             $isOpen={isOpen}
             $isVisible={pathname !== "/"}
             onClick={handleCloseKeyboardAndBlur}
-            style={{height:"480px"}}
+            style={{height:pathname==="/dashboard"?"480px": pathname==="/setting"?"900px":"685px"}}
           >
               {children}
           </MainContentContainer>
