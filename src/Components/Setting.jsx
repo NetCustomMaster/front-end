@@ -73,7 +73,7 @@ export const Setting = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${url}/api/v1/setting/band`);
-        setBand(response.data); // 현재 설정된 대역폭 값을 상태에 저장
+        setBand(response.data.toString()); // 현재 설정된 대역폭 값을 상태에 저장
         console.log(response.data);
       } catch (error) {
         console.error("대역폭 정보 가져오기 중 오류 발생:", error);
