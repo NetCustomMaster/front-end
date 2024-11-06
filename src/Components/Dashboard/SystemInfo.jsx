@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {Button} from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 
 const ResourceComponent = () => {
   const [systemInfo, setSystemInfo] = useState({
@@ -14,21 +14,19 @@ const ResourceComponent = () => {
     upload: '',
   });
 
-  const [trafficData, setTrafficData] = useState([]); // 트래픽 데이터 상태를 배열로 변경
+  const [trafficData, setTrafficData] = useState([]);
   const [error, setError] = useState(null);
-  const [isConnected, setIsConnected] = useState(true); // 연결 상태 관리
-  const eventSourceRef = useRef(null); // EventSource를 위한 ref
-
+  const [isConnected, setIsConnected] = useState(true);
+  const eventSourceRef = useRef(null);
+const [loading,setLoading] = useState(false);
   useEffect(() => {
     const createEventSource = () => {
-      // 기존 EventSource가 존재하면 종료
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
       }
 
-      // 시스템 정보 SSE
       const eventSource = new EventSource(`${import.meta.env.VITE_APP_URL}/api/v1/state/resource`);
-      eventSourceRef.current = eventSource; // ref에 저장
+      eventSourceRef.current = eventSource;
 
       eventSource.onmessage = (event) => {
         try {
@@ -38,35 +36,33 @@ const ResourceComponent = () => {
             memoryUsage: data.memoryUsage,
             connectedDevices: data.connectedDevices,
           });
-          setError(null); // 에러 상태 초기화
-          setIsConnected(true); // 연결 상태 갱신
+          setError(null);
+          setIsConnected(true);
         } catch (e) {
           setError('Error parsing data: ' + e.message);
         }
       };
 
       eventSource.onerror = (event) => {
-        setIsConnected(false); // 연결 실패 시 상태 업데이트
+        setIsConnected(false);
         console.log('Connection failed, trying to reconnect...');
-        eventSource.close(); // 현재 연결 종료
+        eventSource.close();
 
-        // 재연결 로직
         setTimeout(() => {
           console.log('Reconnecting...');
-          createEventSource(); // 새로운 EventSource 생성
-        }, 5000); // 5초 후 재연결 시도
+          createEventSource();
+        }, 5000);
       };
     };
 
     const createTrafficEventSource = () => {
-      // 트래픽 데이터 SSE
       const trafficEventSource = new EventSource(`${import.meta.env.VITE_APP_URL}/api/v1/device`);
 
       trafficEventSource.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data); // JSON 형태로 파싱
+          const data = JSON.parse(event.data);
           console.log("Received traffic data:", data);
-          setTrafficData(data.trafficInfos || []); // 트래픽 데이터 상태 업데이트
+          setTrafficData(data.trafficInfos || []);
         } catch (e) {
           setError('Error parsing traffic data: ' + e.message);
         }
@@ -74,40 +70,42 @@ const ResourceComponent = () => {
 
       trafficEventSource.onerror = (event) => {
         console.log('Traffic EventSource connection failed, trying to reconnect...');
-        trafficEventSource.close(); // 현재 연결 종료
+        trafficEventSource.close();
 
-        // 재연결 로직
         setTimeout(() => {
           console.log('Reconnecting to traffic data...');
-          createTrafficEventSource(); // 새로운 Traffic EventSource 생성
-        }, 5000); // 5초 후 재연결 시도
+          createTrafficEventSource();
+        }, 5000);
       };
     };
 
-    createEventSource(); // 시스템 정보 이벤트 소스 생성
-    createTrafficEventSource(); // 트래픽 데이터 이벤트 소스 생성
+    createEventSource();
+    createTrafficEventSource();
 
     return () => {
       if (eventSourceRef.current) {
-        eventSourceRef.current.close(); // 컴포넌트 언마운트 시 이벤트 소스 종료
+        eventSourceRef.current.close();
       }
     };
   }, []);
 
   const fetchInternetSpeed = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`${import.meta.env.VITE_APP_URL}/api/v1/state/speed`);
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      // 인터넷 속도 정보를 상태로 설정
       setInternetSpeed({
         ping: data.ping,
         download: data.download,
         upload: data.upload,
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       setError('Error fetching internet speed: ' + error.message);
     }
   };
@@ -119,9 +117,15 @@ const ResourceComponent = () => {
       <p><strong>Memory Usage:</strong> {systemInfo.memoryUsage}</p>
       <p><strong>Internet Speed:</strong></p>
       <ul>
-        <li><strong>Ping:</strong> {internetSpeed.ping}</li>
-        <li><strong>Download:</strong> {internetSpeed.download}</li>
-        <li><strong>Upload:</strong> {internetSpeed.upload}</li>
+        <Box sx={{ display: "flex" }}>
+          <Box>
+            <li><strong>Ping:</strong> {internetSpeed.ping} {loading&&<><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
+            <li><strong>Download:</strong> {internetSpeed.download}{loading&& <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
+            <li><strong>Upload:</strong> {internetSpeed.upload} {loading&&<><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
+          </Box>
+
+
+        </Box>
       </ul>
       <h2>Traffic Data:</h2>
       {trafficData.length > 0 ? (
@@ -138,7 +142,7 @@ const ResourceComponent = () => {
         <p>No traffic data received</p>
       )}
       <Button variant="contained" onClick={fetchInternetSpeed}>인터넷 속도 측정</Button>
-      {!isConnected && <p>Reconnecting to server...</p>} {/* 재연결 상태 표시 */}
+      {!isConnected && <p>Reconnecting to server...</p>}
     </div>
   );
 };

@@ -26,7 +26,7 @@ export const Setting = () => {
   const [passwdCheck, setPasswdCheck] = useState("");
   const url = useRecoilValue(urlAtom);
   const [band, setBand] = useState(); // Wi-Fi band 상태 기본값 설정
-  const navi = useNavigate();
+  const [loading,setLoading] = useState(false);
 
   const updateSetting = async () => {
     await updatePasswd();
