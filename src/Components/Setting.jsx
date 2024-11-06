@@ -29,9 +29,10 @@ export const Setting = () => {
   const [loading,setLoading] = useState(false);
 
   const updateSetting = async () => {
-    await updatePasswd();
     await updateBand();
+    await updatePasswd();
     alert("설정이 변경되었습니다.");
+    window.location.reload();
   };
 
   const updatePasswd = async () => {
@@ -49,7 +50,7 @@ export const Setting = () => {
 
   const updateBand = async () => {
     try {
-      const response = await axios.patch(`${url}/api/v1/setting/band`, { band });
+      const response = await axios.patch(`${url}/api/v1/setting/band`, {band:"5"});
       console.log(response.data,"data");
     } catch (error) {
       alert("대역폭 설정 중 오류 발생");
@@ -63,6 +64,9 @@ export const Setting = () => {
         ssid: SSID,
         newpassword: password
       });
+      console.log(password,"password");
+      alert("비밀번호가 변경되었습니다.")
+      window.location.reload();
       console.log(response.data);
     } catch (error) {
       console.error("Wi-Fi 설정 중 오류 발생:", error);
@@ -88,11 +92,13 @@ export const Setting = () => {
         const data = await axios.get(`${url}/api/v1/setting/wifipassword`);
         setSSID(data.data[0]);
         setPassword(data.data[1]);
+        console.log(data.data[1]);
       } catch (error) {
         console.error("Wi-Fi 정보 가져오기 중 오류 발생:", error);
       }
     };
     fetchData();
+
   }, []);
 
   return (
@@ -122,7 +128,7 @@ export const Setting = () => {
               label="와이파이 비밀번호"
               required
               type="password"
-              fieldName="SSID"
+              fieldName="password"
               value={password}
               setValue={setPassword}
               inputRef={inputRef}
