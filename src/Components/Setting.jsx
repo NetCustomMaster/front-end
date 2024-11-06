@@ -16,6 +16,7 @@ import CustomTextField from "./Common/CustomTextField/CustomTextField.jsx";
 import axios from "axios";
 import {useRecoilValue} from "recoil";
 import {urlAtom} from "./recoil/atoms.jsx";
+import {useNavigate} from "react-router-dom";
 
 export const Setting = () => {
   const [SSID, setSSID] = useState("");
@@ -25,7 +26,7 @@ export const Setting = () => {
   const [newPasswd,setNewPasswd] = useState("");
   const [passwdCheck,setPasswdCheck] = useState("");
   const url = useRecoilValue(urlAtom);
-
+const navi = useNavigate();
 
   const updatePasswd =()=> {
     const fetchData = async () =>{
@@ -33,7 +34,11 @@ export const Setting = () => {
       password:adminPw,
       newpassword: newPasswd,
       newpasswordcheck: passwdCheck
+
     })
+      alert("비밀번호가 변경되었습니다.")
+      window.location.reload();
+      navi("/");
       console.log(response.data);
   }
     fetchData();
