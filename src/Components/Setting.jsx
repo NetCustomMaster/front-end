@@ -25,9 +25,9 @@ export const Setting = () => {
   const [newPasswd, setNewPasswd] = useState("");
   const [passwdCheck, setPasswdCheck] = useState("");
   const url = useRecoilValue(urlAtom);
-  const [band, setBand] = useState(); // Wi-Fi band 상태 기본값 설정
+  const [band, setBand] = useState(""); // Wi-Fi band 상태 기본값 설정
   const [loading,setLoading] = useState(false);
-
+console.log(band);
   const updateSetting = async () => {
     await updateBand();
     await updatePasswd();
@@ -50,7 +50,7 @@ export const Setting = () => {
 
   const updateBand = async () => {
     try {
-      const response = await axios.patch(`${url}/api/v1/setting/band`, {band:"5"});
+      const response = await axios.patch(`${url}/api/v1/setting/band`, {band});
       console.log(response.data,"data");
     } catch (error) {
       alert("대역폭 설정 중 오류 발생");
