@@ -8,7 +8,6 @@ import {
   Grid,
   Radio,
   RadioGroup,
-  TextField,
   Typography
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -26,65 +25,72 @@ export const Setting = () => {
   const [newPasswd, setNewPasswd] = useState("");
   const [passwdCheck, setPasswdCheck] = useState("");
   const url = useRecoilValue(urlAtom);
-  const [band, setBand] = useState(""); // Wi-Fi band 상태
+  const [band, setBand] = useState(); // Wi-Fi band 상태 기본값 설정
   const navi = useNavigate();
 
-  const updateSetting=()=>{
-    updatePasswd();
-    updateBand();
-    alert("설정이 변경되었습니다.")
-    window.location.reload();
-  }
-  const updatePasswd = () => {
-    const fetchData = async () => {
+  const updateSetting = async () => {
+    await updatePasswd();
+    await updateBand();
+    alert("설정이 변경되었습니다.");
+  };
+
+  const updatePasswd = async () => {
+    try {
       const response = await axios.post(`${url}/api/v1/setting/changepassword`, {
         password: adminPw,
         newpassword: newPasswd,
         newpasswordcheck: passwdCheck
       });
-
       console.log(response.data);
-    };
-    fetchData();
+    } catch (error) {
+      console.error("비밀번호 변경 중 오류 발생:", error);
+    }
   };
 
-  const updateBand = ()=>{
-    const fetchData = async () => {
-      try{
-      const response = await axios.patch(`${url}/api/v1/setting/band`,band);
-    console.log(response);
-      }catch(error){
-        alert("오류 발생");
-        window.location.reload();
-      }
-    };
-    fetchData();
-  }
-  const updateWifi = () => {
-    const fetchData = async () => {
+  const updateBand = async () => {
+    try {
+      const response = await axios.patch(`${url}/api/v1/setting/band`, { band });
+      console.log(response.data);
+    } catch (error) {
+      alert("대역폭 설정 중 오류 발생");
+      console.error(error);
+    }
+  };
+
+  const updateWifi = async () => {
+    try {
       const response = await axios.patch(`${url}/api/v1/setting/wifipassword`, {
         ssid: SSID,
         newpassword: password
       });
       console.log(response.data);
-    };
-    fetchData();
+    } catch (error) {
+      console.error("Wi-Fi 설정 중 오류 발생:", error);
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${url}/api/v1/setting/band`);
-      setBand(response.data); // 현재 설정된 대역폭 값을 상태에 저장
-      console.log(response.data);
+      try {
+        const response = await axios.get(`${url}/api/v1/setting/band`);
+        setBand(response.data); // 현재 설정된 대역폭 값을 상태에 저장
+        console.log(response.data);
+      } catch (error) {
+        console.error("대역폭 정보 가져오기 중 오류 발생:", error);
+      }
     };
     fetchData();
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await axios.get(`${url}/api/v1/setting/wifipassword`);
-      setSSID(data.data[0]);
-      setPassword(data.data[1]);
+      try {
+        const data = await axios.get(`${url}/api/v1/setting/wifipassword`);
+        setSSID(data.data[0]);
+        setPassword(data.data[1]);
+      } catch (error) {
+        console.error("Wi-Fi 정보 가져오기 중 오류 발생:", error);
+      }
     };
     fetchData();
   }, []);
@@ -183,12 +189,12 @@ export const Setting = () => {
               <RadioGroup
                 row
                 aria-label="bandwidth"
-                name="bandwidth"
+                name="band"
                 value={band} // 현재 대역폭 설정값에 따라 체크
                 onChange={(e) => setBand(e.target.value)} // 선택 변경 시 band 상태 업데이트
               >
-                <FormControlLabel value="2.4Ghz" control={<Radio />} label="2.4Ghz"  onclick={()=>{setBand("2")}}/>
-                <FormControlLabel value="5Ghz" control={<Radio />} label="5Ghz" onClick={()=>{setBand("5")}}/>
+                <FormControlLabel value="2" control={<Radio />} label="2.4Ghz" />
+                <FormControlLabel value="5" control={<Radio />} label="5Ghz" />
               </RadioGroup>
             </FormControl>
           </Grid>
