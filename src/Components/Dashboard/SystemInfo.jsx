@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 
 const ResourceComponent = () => {
   const [systemInfo, setSystemInfo] = useState({
@@ -18,7 +18,8 @@ const ResourceComponent = () => {
   const [error, setError] = useState(null);
   const [isConnected, setIsConnected] = useState(true);
   const eventSourceRef = useRef(null);
-const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const createEventSource = () => {
       if (eventSourceRef.current) {
@@ -32,7 +33,7 @@ const [loading,setLoading] = useState(false);
         try {
           const data = JSON.parse(event.data);
           setSystemInfo({
-            cpuUsage: data.cpuUsage,
+            cpuUsage: data.cpuUsage.replace(/%$/, ''),
             memoryUsage: data.memoryUsage,
             connectedDevices: data.connectedDevices,
           });
@@ -43,7 +44,7 @@ const [loading,setLoading] = useState(false);
         }
       };
 
-      eventSource.onerror = (event) => {
+      eventSource.onerror = () => {
         setIsConnected(false);
         console.log('Connection failed, trying to reconnect...');
         eventSource.close();
@@ -61,19 +62,16 @@ const [loading,setLoading] = useState(false);
       trafficEventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("Received traffic data:", data);
           setTrafficData(data.trafficInfos || []);
         } catch (e) {
           setError('Error parsing traffic data: ' + e.message);
         }
       };
 
-      trafficEventSource.onerror = (event) => {
-        console.log('Traffic EventSource connection failed, trying to reconnect...');
+      trafficEventSource.onerror = () => {
         trafficEventSource.close();
 
         setTimeout(() => {
-          console.log('Reconnecting to traffic data...');
           createTrafficEventSource();
         }, 5000);
       };
@@ -110,23 +108,71 @@ const [loading,setLoading] = useState(false);
     }
   };
 
+  const CircularProgressWithLabel = ({ value, label }) => (
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
+      <Typography variant="body2" sx={{ mb: 1 }}>{label}</Typography>
+      <Box position="relative" display="inline-flex">
+        {/* Background CircularProgress in gray */}
+        <CircularProgress
+          variant="determinate"
+          value={100} // Full circle for background
+          size={80}
+          thickness={5}
+          sx={{ color: 'grey.300', position: 'absolute' }} // Gray color and absolute position
+        />
+
+        {/* Foreground CircularProgress showing actual value */}
+        <CircularProgress
+          variant="determinate"
+          value={value}
+          size={80}
+          thickness={5}
+          sx={{ position: 'relative' }} // Ensure this is on top
+        />
+
+        {/* Centered label */}
+        <Box
+          position="absolute"
+          width="100%"
+          height="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="caption" component="div" color="textSecondary">
+            {`${value}%`}
+          </Typography>
+        </Box>
+
+      </Box>
+    </Box>
+  );
+
+
+
+
+
   return (
     <div>
       <h1>System Resource Information</h1>
-      <p><strong>CPU Usage:</strong> {systemInfo.cpuUsage}</p>
-      <p><strong>Memory Usage:</strong> {systemInfo.memoryUsage}</p>
+      <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+        <CircularProgressWithLabel value={systemInfo.cpuUsage} label="CPU 사용량" />
+        <CircularProgressWithLabel value={systemInfo.memoryUsage} label="메모리 사용량" />
+      </Box>
+
+
+
       <p><strong>Internet Speed:</strong></p>
       <ul>
         <Box sx={{ display: "flex" }}>
           <Box>
-            <li><strong>Ping:</strong> {internetSpeed.ping} {loading&&<><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
-            <li><strong>Download:</strong> {internetSpeed.download}{loading&& <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
-            <li><strong>Upload:</strong> {internetSpeed.upload} {loading&&<><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</> }</li>
+            <li><strong>Ping:</strong> {internetSpeed.ping} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
+            <li><strong>Download:</strong> {internetSpeed.download} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
+            <li><strong>Upload:</strong> {internetSpeed.upload} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
           </Box>
-
-
         </Box>
       </ul>
+
       <h2>Traffic Data:</h2>
       {trafficData.length > 0 ? (
         <ul>
@@ -143,6 +189,7 @@ const [loading,setLoading] = useState(false);
       )}
       <Button variant="contained" onClick={fetchInternetSpeed}>인터넷 속도 측정</Button>
       {!isConnected && <p>Reconnecting to server...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };
