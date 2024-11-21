@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {Download, NetworkPing, Upload} from "@mui/icons-material";
 
 const ResourceComponent = () => {
   const [systemInfo, setSystemInfo] = useState({
@@ -162,15 +163,29 @@ const ResourceComponent = () => {
 
 
 
-      <p><strong>Internet Speed:</strong></p>
+      <p><strong>인터넷 속도 </strong>      <Button variant="contained" onClick={fetchInternetSpeed} size={"small"}>측정 시작</Button></p>
       <ul>
-        <Box sx={{ display: "flex" }}>
-          <Box>
-            <li><strong>Ping:</strong> {internetSpeed.ping} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
-            <li><strong>Download:</strong> {internetSpeed.download} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
-            <li><strong>Upload:</strong> {internetSpeed.upload} {loading && <><CircularProgress size={12} sx={{ marginRight: "10px" }} /> Loading</>}</li>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <Box sx={{ textAlign: "center" }}>
+            <NetworkPing  sx={{fontSize:"40px"}}/>
+            <Box component="span" sx={{ display: "block", fontSize: "12px" }}>Ping</Box>
+            <Box component="strong">{internetSpeed.ping}</Box>
+            {loading && <CircularProgress size={12} sx={{ marginLeft: "5px" }} />}
+          </Box>
+          <Box sx={{ textAlign: "center" }}>
+            <Download  sx={{fontSize:"40px"}}/>
+            <Box component="span" sx={{ display: "block", fontSize: "12px" }}>Down</Box>
+            <Box component="strong">{internetSpeed.download}</Box>
+            {loading && <CircularProgress size={12} sx={{ marginLeft: "5px" }} />}
+          </Box>
+          <Box sx={{ textAlign: "center" }}>
+            <Upload  sx={{fontSize:"40px"}}/>
+            <Box component="span" sx={{ display: "block", fontSize: "12px" }}>Upload</Box>
+            <Box component="strong">{internetSpeed.upload}</Box>
+            {loading && <CircularProgress size={12} sx={{ marginLeft: "5px" }} />}
           </Box>
         </Box>
+
       </ul>
 
       <h2>Traffic Data:</h2>
@@ -187,7 +202,7 @@ const ResourceComponent = () => {
       ) : (
         <p>No traffic data received</p>
       )}
-      <Button variant="contained" onClick={fetchInternetSpeed}>인터넷 속도 측정</Button>
+
       {!isConnected && <p>Reconnecting to server...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
