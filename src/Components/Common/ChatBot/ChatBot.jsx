@@ -3,16 +3,18 @@ import axios from 'axios';
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import CustomTextField from "../CustomTextField/CustomTextField.jsx";
 import { Box, Button, CircularProgress } from "@mui/material";
+import {useRecoilValue} from "recoil";
+import {urlAtom} from "../../recoil/atoms.jsx";
 //test
 const Chatbot = () => {
   const [userMessage, setUserMessage] = useState('');
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const url = useRecoilValue(urlAtom);
   const handleSendMessage = async () => {
     try {
       setLoading(true);
-      const response = await axios.post('http://taka535.duckdns.org:9090/api/v1/solve', userMessage, {
+      const response = await axios.post(`${url}/api/v1/solve`, userMessage, {
         headers: {
           'Content-Type': 'text/plain'
         }
