@@ -190,7 +190,7 @@ const ResourceComponent = () => {
         </Box>
 
       </ul>
-      //todo: 트래픽 기능 오른쪽으로 옮기기
+      {/*//todo: 트래픽 기능 오른쪽으로 옮기기*!/*/}
       {/*임시로 주석*/}
       {/*<h2>Traffic Data:</h2>*/}
       {/*{trafficData.length > 0 ? (*/}
