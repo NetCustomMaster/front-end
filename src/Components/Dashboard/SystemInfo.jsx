@@ -155,7 +155,9 @@ const ResourceComponent = () => {
 
   return (
     <div>
-      <h1>System Resource Information</h1>
+      <div style={{width:"100%", marginLeft:"50px"}}>
+      <h1>시스템 자원 정보</h1>
+      </div>
       <Box sx={{ display: "flex", justifyContent: "space-around" }}>
         <CircularProgressWithLabel value={systemInfo.cpuUsage} label="CPU 사용량" />
         <CircularProgressWithLabel value={systemInfo.memoryUsage} label="메모리 사용량" />
@@ -163,14 +165,15 @@ const ResourceComponent = () => {
 
 
 
-      <p><strong>인터넷 속도 </strong>      <Button variant="contained" onClick={fetchInternetSpeed} size={"small"}>측정 시작</Button></p>
+      <p style={{marginTop:"40px",marginLeft:"50px"}}><strong style={{fontSize:"20px"}}>인터넷 속도 </strong>      </p>
       <ul>
-        <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <Box sx={{ textAlign: "center" }}>
-            <NetworkPing  sx={{fontSize:"40px"}}/>
-            <Box component="span" sx={{ display: "block", fontSize: "12px" }}>Ping</Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "80px" , width:"100%" }}>
+          <Box sx={{textAlign: "center"}}>
+            <NetworkPing sx={{fontSize: "40px"}}/>
+            <Box component="span" sx={{display: "block", fontSize: "12px"}}>Ping</Box>
             <Box component="strong">{internetSpeed.ping}</Box>
-            {loading && <CircularProgress size={12} sx={{ marginLeft: "5px" }} />}
+            <br/>
+            {loading && <CircularProgress size={12} sx={{marginLeft: "5px"}}/>}
           </Box>
           <Box sx={{ textAlign: "center" }}>
             <Download  sx={{fontSize:"40px"}}/>
@@ -187,24 +190,27 @@ const ResourceComponent = () => {
         </Box>
 
       </ul>
-
-      <h2>Traffic Data:</h2>
-      {trafficData.length > 0 ? (
-        <ul>
-          {trafficData.map((trafficInfo, index) => (
-            <li key={index}>
-              <strong>IP Address:</strong> {trafficInfo.ipAddress},
-              <strong>Last 2s Traffic:</strong> {trafficInfo.last2sTraffic},
-              <strong>Direction:</strong> {trafficInfo.direction}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No traffic data received</p>
-      )}
+      //todo: 트래픽 기능 오른쪽으로 옮기기
+      {/*임시로 주석*/}
+      {/*<h2>Traffic Data:</h2>*/}
+      {/*{trafficData.length > 0 ? (*/}
+      {/*  <ul>*/}
+      {/*    {trafficData.map((trafficInfo, index) => (*/}
+      {/*      <li key={index}>*/}
+      {/*        <strong>IP Address:</strong> {trafficInfo.ipAddress},*/}
+      {/*        <strong>Last 2s Traffic:</strong> {trafficInfo.last2sTraffic},*/}
+      {/*        <strong>Direction:</strong> {trafficInfo.direction}*/}
+      {/*      </li>*/}
+      {/*    ))}*/}
+      {/*  </ul>*/}
+      {/*) : (*/}
+      {/*  <p>No traffic data received</p>*/}
+      {/*)}*/}
 
       {!isConnected && <p>Reconnecting to server...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <Button variant="contained" onClick={fetchInternetSpeed}  sx={{marginLeft:"130px" ,marginTop:"10px"}}>측정 시작</Button>
     </div>
   );
 };

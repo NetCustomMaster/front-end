@@ -84,7 +84,7 @@ export const DashboardPage = () => {
                       <Typography sx={{ fontWeight: "700", fontSize: "18px", mt: "20px" }}>
                           연결 기기 트래픽 (Mbps)
                       </Typography>
-                      <Box sx={{ height: "100%", overflowY: "auto" }}>
+                      <Box sx={{ height: "440px", overflowY: "auto" }}>
                           <TrafficCheck />
                           <TrafficCheck />
                           <TrafficCheck />
