@@ -1,4 +1,4 @@
-export const KoreanLayout = {
+export const KoreanLayoutBackup = {
     default: [
         "1 2 3 4 5 6 7 8 9 0 {bksp}",
         "ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ {lang}",
@@ -11,6 +11,23 @@ export const KoreanLayout = {
         "ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ {enter}",
         "{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {space}"
     ]
+};
+export const KoreanLayout = {
+
+    default: [
+        "1 2 3 4 5 6 7 8 9 0",
+        "ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ",
+        "ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ",
+        "{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {bksp}",
+        "{lang} / {space} . {enter}"
+    ],
+    shift: [
+        "! @ # $ % ^ & * ( ) {bksp}",
+        "ㅃ ㅉ ㄸ ㄲ ㅆ ㅛ ㅕ ㅑ ㅒ ㅖ {lang}",
+        "ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ {enter}",
+        "{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {space}"
+    ],
+
 };
 
 export const EnglishLayout = {

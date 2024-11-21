@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
+import "./keyboard.css"
 import { KoreanLayout, EnglishLayout } from "./Layouts.jsx";
 import { Box, styled } from "@mui/material";
 import hangul from "hangul-js";
@@ -45,7 +46,7 @@ const CustomKeyboard = ({ value, setValue, onClose }) => {
     };
 
     return (
-        <KeyboardWrapper onMouseDown={handleMouseDown} onClick={(e)=>e.stopPropagation()}>
+        <KeyboardWrapper onMouseDown={handleMouseDown} onClick={(e)=>e.stopPropagation()} style={{width:"780px"}}>
             <Keyboard
                 onClick={(e)=>e.stopPropagation()}
                 layout={isKorean ? KoreanLayout : EnglishLayout}

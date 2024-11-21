@@ -12,63 +12,86 @@ const blink = keyframes`
 `;
 
 const CustomTextField = ({
-                             fieldName,
-                             value,
-                             setValue,
-                             ...props
+                           fieldName,
+                           value,
+                           setValue,
+                           ...props
                          }) => {
-    const [activeInput, setActiveInput] = useRecoilState(activeInputAtom);
-    const [showKeyboard, setShowKeyboard] = useState(false);
-    const inputRef = useRef(null);
+  const [activeInput, setActiveInput] = useRecoilState(activeInputAtom);
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const inputRef = useRef(null);
 
-    const handleFocus = () => {
-        if (activeInput !== fieldName) {
-            setActiveInput(fieldName);
-            setShowKeyboard(true);
-        }
-    };
+  const handleFocus = () => {
+    if (activeInput !== fieldName) {
+      setActiveInput(fieldName);
+      setShowKeyboard(true);
+    }
+  };
 
-    const handleBlur = () => {
-        setShowKeyboard(false);
-        setActiveInput(null);
-    };
+  const handleBlur = () => {
+    setShowKeyboard(false);
+    setActiveInput(null);
+  };
 
-    useLayoutEffect(() => {
-        if (showKeyboard && activeInput === fieldName && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [showKeyboard, activeInput, fieldName]);
+  const handleClick = () => {
+    setTimeout(() => {
+      if (inputRef.current) {
+        const rect = inputRef.current.getBoundingClientRect();
+        const topOffset = 10; // 화면 상단 여유 공간
 
-    return (
-      <Box position="relative">
-          <TextField
-            {...props}
-            inputRef={inputRef}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+        // TextField를 화면 최상단으로 스크롤
+        window.scrollTo({
+          top: window.scrollY + rect.top - topOffset,
+          behavior: 'smooth',
+        });
+
+        // DOM 업데이트 후 포커스 설정
+        setTimeout(() => {
+          inputRef.current.focus();
+        }, 300); // 스크롤 완료 후 지연
+      }
+    }, 0); // 초기 딜레이
+  };
+
+
+  useLayoutEffect(() => {
+    if (showKeyboard && activeInput === fieldName && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showKeyboard, activeInput, fieldName]);
+
+
+
+  return (
+    <Box position="relative" sx={{overflow:"visible"}} onClick={handleClick}>
+      <TextField
+        {...props}
+        inputRef={inputRef}
+        onClick={handleClick}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      {showKeyboard && (
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 1000,
+          }}
+        >
+          <CustomKeyboard
             value={value}
-            onChange={(e) => setValue(e.target.value)}
-
+            setValue={setValue}
+            onClose={() => setShowKeyboard(false)}
           />
-          {showKeyboard && (
-            <Box
-              sx={{
-                  position: 'fixed',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  zIndex: 1000,
-              }}
-            >
-                <CustomKeyboard
-                  value={value}
-                  setValue={setValue}
-                  onClose={() => setShowKeyboard(false)}
-                />
-            </Box>
-          )}
-      </Box>
-    );
+        </Box>
+      )}
+    </Box>
+  );
 };
 
 export default CustomTextField;

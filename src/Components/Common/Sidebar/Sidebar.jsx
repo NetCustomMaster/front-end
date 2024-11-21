@@ -116,7 +116,7 @@ const Sidebar = ({ children }) => {
             $isOpen={isOpen}
             $isVisible={pathname !== "/"}
             onClick={handleCloseKeyboardAndBlur}
-            style={{height:pathname==="/dashboard"?"480px": pathname==="/setting"?"900px":"685px"}}
+            style={{height:pathname==="/dashboard"?"480px": pathname==="/setting"?"1100px":"730px"}}
           >
               {children}
           </MainContentContainer>

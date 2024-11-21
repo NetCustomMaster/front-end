@@ -1,0 +1,29 @@
+.hg-row:nth-of-type(5) {
+    /*display:inline-flex;*/
+}
+
+/*space*/
+.hg-button.hg-functionBtn[data-skbtnuid="default-r4b2"] {
+width:400px;
+}
+/*/*/
+.hg-button.hg-standardBtn[data-skbtnuid="{default-r4b1}"] {
+}
+/*.*/
+.hg-button.hg-standardBtn[data-skbtnuid="{default-r4b3}"] {
+}
+
+
+
+.hg-row:nth-of-type(3) {
+    margin-left:35px;
+    width:700px;
+    justify-content: center;
+}
+
+.hg-rows{
+    justify-content: center;
+    align-items: center;
+}
+
+
