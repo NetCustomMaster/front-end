@@ -191,21 +191,21 @@ const ResourceComponent = () => {
 
       </ul>
       {/*//todo: 트래픽 기능 오른쪽으로 옮기기*!/*/}
-      {/*임시로 주석*/}
-      {/*<h2>Traffic Data:</h2>*/}
-      {/*{trafficData.length > 0 ? (*/}
-      {/*  <ul>*/}
-      {/*    {trafficData.map((trafficInfo, index) => (*/}
-      {/*      <li key={index}>*/}
-      {/*        <strong>IP Address:</strong> {trafficInfo.ipAddress},*/}
-      {/*        <strong>Last 2s Traffic:</strong> {trafficInfo.last2sTraffic},*/}
-      {/*        <strong>Direction:</strong> {trafficInfo.direction}*/}
-      {/*      </li>*/}
-      {/*    ))}*/}
-      {/*  </ul>*/}
-      {/*) : (*/}
-      {/*  <p>No traffic data received</p>*/}
-      {/*)}*/}
+      {/* 임시로 주석*/}
+      <h2>Traffic Data:</h2>
+      {trafficData.length > 0 ? (
+       <ul>
+         {trafficData.map((trafficInfo, index) => (
+           <li key={index}>
+           <strong>IP Address:</strong> {trafficInfo.ipAddress},
+             <strong>Last 2s Traffic:</strong> {trafficInfo.last2sTraffic},
+            <strong>Direction:</strong> {trafficInfo.direction}
+           </li>
+        ))}
+       </ul>
+      ) : (
+        <p>No traffic data received</p>
+      )}
 
       {!isConnected && <p>Reconnecting to server...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
