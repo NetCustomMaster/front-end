@@ -1,10 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import "./keyboard.css"
 import { KoreanLayout, EnglishLayout } from "./Layouts.jsx";
 import { Box, styled } from "@mui/material";
 import hangul from "hangul-js";
+import { useRecoilState } from 'recoil';
+import { activeInputAtom } from '../recoil/atoms.jsx';
 
 const KeyboardWrapper = styled(Box)`
     position: fixed;
@@ -17,56 +19,74 @@ const KeyboardWrapper = styled(Box)`
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 `;
 
-const CustomKeyboard = ({ value, setValue, onClose }) => {
+const CustomKeyboard = () => {
     const [layoutName, setLayoutName] = useState("default");
     const [isKorean, setIsKorean] = useState(true);
-    const [isKeyPressed, setIsKeyPressed] = useState(false);
-    const keyPressTimer = useRef(null);
+    const [activeInput, setActiveInput] = useRecoilState(activeInputAtom);
+
+    useEffect(() => {
+        const preventContextMenu = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
+        
+        document.addEventListener('contextmenu', preventContextMenu);
+        return () => {
+            document.removeEventListener('contextmenu', preventContextMenu);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const keyboard = document.querySelector('.simple-keyboard');
+            if (keyboard && !keyboard.contains(event.target) && 
+                !event.target.closest('input') && !event.target.closest('button')) {
+                setActiveInput({ fieldName: null, value: '', setValue: null });
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [setActiveInput]);
 
     const onKeyPress = (key) => {
-        if (isKeyPressed) return; // 이미 키가 눌려있는 상태면 추가 입력 방지
+        if (!activeInput.setValue) return;
 
         if (key === "{bksp}" || key === "{pre}") {
-            setValue((prev) => prev.slice(0, -1));
+            activeInput.setValue((prev) => prev.slice(0, -1));
         } else if (key === "{shift}") {
             setLayoutName((prev) => (prev === "default" ? "shift" : "default"));
         } else if (key === "{lang}") {
             setIsKorean((prev) => !prev);
         } else if (key === "{space}") {
-            setValue((prev) => prev + " ");
+            activeInput.setValue((prev) => prev + " ");
         } else if (key === "{enter}") {
-            onClose(); // Enter 키를 누르면 키보드를 닫음
+            setActiveInput({ fieldName: null, value: '', setValue: null });
         } else {
             if (isKorean) {
-                setValue((prev) => hangul.assemble(hangul.disassemble(prev + key)));
+                activeInput.setValue((prev) => hangul.assemble(hangul.disassemble(prev + key)));
             } else {
-                setValue((prev) => prev + key);
+                activeInput.setValue((prev) => prev + key);
             }
         }
     };
 
-    const handleTouchStart = (event) => {
-        event.preventDefault();
-        setIsKeyPressed(true);
-    };
-
-    const handleTouchEnd = (event) => {
-        event.preventDefault();
-        setIsKeyPressed(false);
-        if (keyPressTimer.current) {
-            clearTimeout(keyPressTimer.current);
-            keyPressTimer.current = null;
-        }
-    };
-
-    const handleMouseDown = (event) => {
-        event.preventDefault(); // CustomKeyboard 클릭 시 이벤트 전파 막기
-    };
+    if (!activeInput.fieldName) return null;
 
     return (
-        <KeyboardWrapper onMouseDown={handleMouseDown} onClick={(e)=>e.stopPropagation()} style={{width:"780px"}}>
+        <KeyboardWrapper 
+            onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }}
+            style={{width:"780px",zIndex:"1000"}}
+        >
             <Keyboard
-                onClick={(e)=>e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
                 layout={isKorean ? KoreanLayout : EnglishLayout}
                 layoutName={layoutName}
                 onKeyPress={onKeyPress}
@@ -79,11 +99,9 @@ const CustomKeyboard = ({ value, setValue, onClose }) => {
                     "{shift}": "Shift",
                     "{lang}": "Lang",
                 }}
-                value={value}
-                physicalKeyboardHighlight={false}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                stopMouseDownPropagation={true}
+                value={activeInput.value}
+                disableCaretPositioning={true}
+                disableRowButtonContainers={true}
                 preventMouseDownDefault={true}
             />
         </KeyboardWrapper>

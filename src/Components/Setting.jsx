@@ -102,8 +102,8 @@ export const Setting = () => {
 
   return (
     <Sidebar>
-      <Box sx={{ padding: 4 }}>
-        <Typography variant="h5" sx={{ marginBottom: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', height: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
+        <Typography variant="h5" sx={{ marginBottom: 2, marginTop: 2 }}>
           설정
         </Typography>
 
@@ -241,7 +241,7 @@ export const Setting = () => {
           </Grid>
           <Button
             variant="contained"
-            sx={{ margin: "0px auto", padding: "10px 40px", marginTop: "20px" }}
+            sx={{ margin: "0px auto", padding: "10px 40px", marginTop: "20px" , marginBottom:"20px"}} 
             onClick={updateBand}
           >
             적용

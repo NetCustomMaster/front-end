@@ -3,9 +3,12 @@ import { atom, selector } from 'recoil';
 
 export const activeInputAtom = atom({
     key: 'activeInput',
-    default: null,
+    default: {
+        fieldName: null,
+        value: '',
+        setValue: null,
+    },
 });
-
 
 export const showKeyboardAtom = atom({
     key: 'showKeyboardAtom',
