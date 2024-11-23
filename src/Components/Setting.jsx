@@ -51,6 +51,7 @@ export const Setting = () => {
         band,
       });
       console.log(response.data, "data");
+      alert("대역폭가 변경되었습니다.");
     } catch (error) {
       alert("대역폭 설정 중 오류 발생");
       console.error(error);
@@ -145,7 +146,7 @@ export const Setting = () => {
           </Button>
 
           {/* 관리자 비밀번호 재설정 */}
-          <Grid item xs={12} sx={{ marginTop: "20px" }}>
+          {/* <Grid item xs={12} sx={{ marginTop: "20px" }}>
             <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
               관리자 비밀번호 재설정
             </Box>
@@ -206,7 +207,7 @@ export const Setting = () => {
             onClick={updatePasswd}
           >
             적용
-          </Button>
+          </Button> */}
 
           {/* 대역폭 설정 */}
           <Grid item xs={12} sx={{ marginTop: "20px" }}>
