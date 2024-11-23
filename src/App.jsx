@@ -4,7 +4,8 @@ import {DashboardPage} from "./Components/Dashboard/DashboardPage.jsx";
 import {KeyboardProvider} from "./Components/Common/KeyboardContext.jsx";
 import {Setting} from "./Components/Setting.jsx";
 import Chatbot from "./Components/Common/ChatBot/ChatBot.jsx";
-import {RegistPage} from "./Components/Login/RegistPage.jsx"; // 대시보드 컴포넌트를 추가한다고 가정
+import {RegistPage} from "./Components/Login/RegistPage.jsx"; 
+import CustomKeyboard from "./Components/Common/CustomKeyboard"; // CustomKeyboard 컴포넌트를 추가합니다.
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
               <Route path="/setting" element={<Setting />}/>
               <Route path="/chatbot"  element={<Chatbot/>}/>
             </Routes>
+            <CustomKeyboard />
             </KeyboardProvider>
         </Router>
     );
