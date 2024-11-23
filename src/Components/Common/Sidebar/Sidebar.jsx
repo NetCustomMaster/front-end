@@ -33,8 +33,8 @@ const MainContentContainer = styled.div`
     flex-grow: 1;
     margin-left: ${(props) => (props.$isOpen ? "170px" : props.$isVisible ? "55px" : "10px")};  /* 사이드바가 열렸을 때 main 콘텐츠 위치 */
     transition: margin-left 0.3s ease-in-out;
-    height: 100vh;
-    overflow-y: auto;
+    height: 480px;
+    overflow-y: hidden;
 `;
 
 const ToggleButton = styled.button`
@@ -116,7 +116,7 @@ const Sidebar = ({ children }) => {
             $isOpen={isOpen}
             $isVisible={pathname !== "/"}
             onClick={handleCloseKeyboardAndBlur}
-            // style={{height:pathname==="/dashboard"?"480px": pathname==="/setting"?"1100px":"730px"}}
+            sx={{height:"480px"}}
           >
               {children}
           </MainContentContainer>
