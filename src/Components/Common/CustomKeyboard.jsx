@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import "./keyboard.css"
@@ -20,8 +20,12 @@ const KeyboardWrapper = styled(Box)`
 const CustomKeyboard = ({ value, setValue, onClose }) => {
     const [layoutName, setLayoutName] = useState("default");
     const [isKorean, setIsKorean] = useState(true);
+    const [isKeyPressed, setIsKeyPressed] = useState(false);
+    const keyPressTimer = useRef(null);
 
     const onKeyPress = (key) => {
+        if (isKeyPressed) return; // 이미 키가 눌려있는 상태면 추가 입력 방지
+
         if (key === "{bksp}" || key === "{pre}") {
             setValue((prev) => prev.slice(0, -1));
         } else if (key === "{shift}") {
@@ -38,6 +42,20 @@ const CustomKeyboard = ({ value, setValue, onClose }) => {
             } else {
                 setValue((prev) => prev + key);
             }
+        }
+    };
+
+    const handleTouchStart = (event) => {
+        event.preventDefault();
+        setIsKeyPressed(true);
+    };
+
+    const handleTouchEnd = (event) => {
+        event.preventDefault();
+        setIsKeyPressed(false);
+        if (keyPressTimer.current) {
+            clearTimeout(keyPressTimer.current);
+            keyPressTimer.current = null;
         }
     };
 
@@ -62,6 +80,11 @@ const CustomKeyboard = ({ value, setValue, onClose }) => {
                     "{lang}": "Lang",
                 }}
                 value={value}
+                physicalKeyboardHighlight={false}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                stopMouseDownPropagation={true}
+                preventMouseDownDefault={true}
             />
         </KeyboardWrapper>
     );
