@@ -8,7 +8,7 @@ import {
   Grid,
   Radio,
   RadioGroup,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import CustomTextField from "./Common/CustomTextField/CustomTextField.jsx";
@@ -26,22 +26,19 @@ export const Setting = () => {
   const [passwdCheck, setPasswdCheck] = useState("");
   const url = useRecoilValue(urlAtom);
   const [band, setBand] = useState(""); // Wi-Fi band 상태 기본값 설정
-  const [loading,setLoading] = useState(false);
-console.log(band);
-  const updateSetting = async () => {
-    await updateBand();
-    await updatePasswd();
-    alert("설정이 변경되었습니다.");
-    window.location.reload();
-  };
+  const [loading, setLoading] = useState(false);
+  console.log(band);
 
   const updatePasswd = async () => {
     try {
-      const response = await axios.post(`${url}/api/v1/setting/changepassword`, {
-        password: adminPw,
-        newpassword: newPasswd,
-        newpasswordcheck: passwdCheck
-      });
+      const response = await axios.post(
+        `${url}/api/v1/setting/changepassword`,
+        {
+          password: adminPw,
+          newpassword: newPasswd,
+          newpasswordcheck: passwdCheck,
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error("비밀번호 변경 중 오류 발생:", error);
@@ -50,8 +47,10 @@ console.log(band);
 
   const updateBand = async () => {
     try {
-      const response = await axios.patch(`${url}/api/v1/setting/band`, {band});
-      console.log(response.data,"data");
+      const response = await axios.patch(`${url}/api/v1/setting/band`, {
+        band,
+      });
+      console.log(response.data, "data");
     } catch (error) {
       alert("대역폭 설정 중 오류 발생");
       console.error(error);
@@ -62,10 +61,10 @@ console.log(band);
     try {
       const response = await axios.patch(`${url}/api/v1/setting/wifipassword`, {
         ssid: SSID,
-        newpassword: password
+        newpassword: password,
       });
-      console.log(password,"password");
-      alert("비밀번호가 변경되었습니다.")
+      console.log(password, "password");
+      alert("비밀번호가 변경되었습니다.");
       window.location.reload();
       console.log(response.data);
     } catch (error) {
@@ -78,7 +77,7 @@ console.log(band);
       try {
         const response = await axios.get(`${url}/api/v1/setting/band`);
         setBand(response.data.toString()); // 현재 설정된 대역폭 값을 상태에 저장
-        console.log(response.data,"data");
+        console.log(response.data, "data");
       } catch (error) {
         console.error("대역폭 정보 가져오기 중 오류 발생:", error);
       }
@@ -98,19 +97,22 @@ console.log(band);
       }
     };
     fetchData();
-
   }, []);
 
   return (
     <Sidebar>
       <Box sx={{ padding: 4 }}>
-        <Typography variant="h5" sx={{ marginBottom: 2 }}>설정</Typography>
+        <Typography variant="h5" sx={{ marginBottom: 2 }}>
+          설정
+        </Typography>
 
         <Grid container spacing={2}>
+          {/* 와이파이 설정 */}
           <Grid item xs={12} sx={{ marginTop: "10px" }}>
-            <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>와이파이 설정</Box>
+            <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
+              와이파이 설정
+            </Box>
           </Grid>
-
           <Grid item xs={12}>
             <CustomTextField
               label="SSID"
@@ -134,10 +136,19 @@ console.log(band);
               inputRef={inputRef}
             />
           </Grid>
-          <Button variant="contained" sx={{ margin: "0px auto", marginTop: "20px", padding: "10px 40px" }} onClick={updateWifi}>적용</Button>
+          <Button
+            variant="contained"
+            sx={{ margin: "0px auto", marginTop: "20px", padding: "10px 40px" }}
+            onClick={updateWifi}
+          >
+            적용
+          </Button>
 
+          {/* 관리자 비밀번호 재설정 */}
           <Grid item xs={12} sx={{ marginTop: "20px" }}>
-            <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>관리자 비밀번호 재설정</Box>
+            <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
+              관리자 비밀번호 재설정
+            </Box>
           </Grid>
           <Grid item xs={12}>
             <CustomTextField
@@ -189,6 +200,20 @@ console.log(band);
               inputRef={inputRef}
             />
           </Grid>
+          <Button
+            variant="contained"
+            sx={{ margin: "0px auto", padding: "10px 40px", marginTop: "20px" }}
+            onClick={updatePasswd}
+          >
+            적용
+          </Button>
+
+          {/* 대역폭 설정 */}
+          <Grid item xs={12} sx={{ marginTop: "20px" }}>
+            <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
+              대역폭 설정
+            </Box>
+          </Grid>
           <Grid item xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">대역폭</FormLabel>
@@ -196,15 +221,30 @@ console.log(band);
                 row
                 aria-label="bandwidth"
                 name="band"
-               
-                onChange={(e) => setBand(e.target.value)} // 선택 변경 시 band 상태 업데이트
+                onChange={(e) => setBand(e.target.value)}
               >
-                <FormControlLabel value="2" control={<Radio />} label="2.4Ghz" checked={band==="2"}/>
-                <FormControlLabel value="5" control={<Radio />} label="5Ghz" checked={band==="5"}/>
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label="2.4Ghz"
+                  checked={band === "2"}
+                />
+                <FormControlLabel
+                  value="5"
+                  control={<Radio />}
+                  label="5Ghz"
+                  checked={band === "5"}
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Button variant="contained" sx={{ margin: "0px auto", padding: "10px 40px" }} onClick={updateSetting}>적용</Button>
+          <Button
+            variant="contained"
+            sx={{ margin: "0px auto", padding: "10px 40px", marginTop: "20px" }}
+            onClick={updateBand}
+          >
+            적용
+          </Button>
         </Grid>
       </Box>
     </Sidebar>
