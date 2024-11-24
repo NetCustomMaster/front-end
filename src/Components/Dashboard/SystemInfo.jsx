@@ -22,14 +22,17 @@ const SystemInfo = () => {
         const createEventSource = () => {
             const eventSource = new EventSource(`${url}/api/v1/state/resource`);
 
+           
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    setSystemInfo({
-                        cpuUsage: data.cpuUsage.replace(/%$/, ''),
-                        memoryUsage: data.memoryUsage,
-                        connectedDevices: data.connectedDevices,
-                    });
+                  
+                  const formattedData ={
+                    ...data,
+                    cpuUsage: data.cpuUsage.replace('%', ''),
+                  }
+                  console.log("eventData",formattedData);
+                    setSystemInfo(formattedData);
                     setError(null);
                     setIsConnected(true);
                 } catch (e) {

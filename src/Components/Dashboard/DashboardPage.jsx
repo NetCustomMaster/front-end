@@ -62,34 +62,6 @@ export const DashboardPage = () => {
         }
     };
 
-    useEffect(() => {
-        let eventSource;
-        const createEventSource = () => {
-            eventSource = new EventSource(`${url}/api/v1/state/resource`);
-            handleUpdate();
-            eventSource.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    setSystemInfo(data);
-                } catch (e) {
-                    setError('Error parsing system info: ' + e.message);
-                }
-            };
-
-            eventSource.onerror = () => {
-                setError('EventSource failed.');
-                eventSource.close();
-                setTimeout(createEventSource, 5000);
-            };
-        };
-
-        createEventSource();
-        return () => {
-            if (eventSource) {
-                eventSource.close();
-            }
-        };
-    }, [url, setError, setSystemInfo]);
 
     useEffect(() => {
         let trafficEventSource;
