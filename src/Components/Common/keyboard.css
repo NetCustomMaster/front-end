@@ -3,15 +3,17 @@
 }
 
 /*space*/
-.hg-button.hg-functionBtn[data-skbtnuid="default-r4b2"] {
+.hg-button.hg-functionBtn[data-skbtn="{space}"] {
 width:400px;
 }
-/*/*/
-.hg-button.hg-standardBtn[data-skbtnuid="{default-r4b1}"] {
-}
-/*.*/
-.hg-button.hg-standardBtn[data-skbtnuid="{default-r4b3}"] {
-}
+/*shift*/
+.hg-button.hg-functionBtn[data-skbtn="{shift}"] {
+    width:50px;
+    }
+/*shift*/
+.hg-button.hg-functionBtn[data-skbtnuid="default-r3b8"] {
+    width:50px;
+    }
 
 
 
