@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton, Typography } from "@mui/material";
 import { Download, NetworkPing, Upload } from "@mui/icons-material";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { 
@@ -9,7 +9,7 @@ import {
     urlAtom, 
     internetSpeedState 
 } from '../recoil/atoms.jsx';
-
+import ReplayIcon from '@mui/icons-material/Replay';
 const SystemInfo = () => {
     const [systemInfo, setSystemInfo] = useRecoilState(systemInfoState);
     const [isConnected, setIsConnected] = useRecoilState(isConnectedState);
@@ -125,10 +125,14 @@ const SystemInfo = () => {
         </Box>
     );
 
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
     return (
         <div>
             <div style={{width:"100%", marginLeft:"50px"}}>
-                <h1>시스템 자원 정보</h1>
+                <h1>시스템 자원 정보<IconButton onClick={handleRefresh} sx={{marginTop:"-10px"}}><ReplayIcon sx={{marginLeft:"10px"}}/></IconButton></h1>
             </div>
             <Box sx={{ display: "flex", justifyContent: "space-around" }}>
                 <CircularProgressWithLabel 
