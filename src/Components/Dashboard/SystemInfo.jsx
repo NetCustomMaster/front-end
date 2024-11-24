@@ -132,7 +132,7 @@ const SystemInfo = () => {
     return (
         <div>
             <div style={{width:"100%", marginLeft:"50px"}}>
-                <h1>시스템 자원 정보<IconButton onClick={handleRefresh} sx={{marginTop:"-10px"}}><ReplayIcon sx={{marginLeft:"10px"}}/></IconButton></h1>
+                <h1>시스템 자원 정보<IconButton onClick={handleRefresh} sx={{marginTop:"-10px",marginLeft:"10px"}}><ReplayIcon/></IconButton></h1>
             </div>
             <Box sx={{ display: "flex", justifyContent: "space-around" }}>
                 <CircularProgressWithLabel 
