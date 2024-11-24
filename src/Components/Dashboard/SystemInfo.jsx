@@ -19,41 +19,55 @@ const SystemInfo = () => {
     const url = useRecoilValue(urlAtom);
 
     useEffect(() => {
-        const createEventSource = () => {
-            const eventSource = new EventSource(`${url}/api/v1/state/resource`);
+        let eventSource;
+        let retryCount = 0;
+        const maxRetries = 5;
+        const retryDelay = 5000; // 5초
 
+        const createEventSource = () => {
+            if (retryCount >= maxRetries) {
+                setError('연결 재시도 횟수 초과. 페이지를 새로고침해주세요.');
+                return;
+            }
+
+            eventSource = new EventSource(`${url}/api/v1/state/resource`);
            
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
                   
-                  const formattedData ={
-                    ...data,
-                    cpuUsage: data.cpuUsage.replace('%', ''),
-                  }
-                  console.log("eventData",formattedData);
+                    const formattedData ={
+                        ...data,
+                        cpuUsage: data.cpuUsage.replace('%', ''),
+                    }
+                    console.log("eventData",formattedData);
                     setSystemInfo(formattedData);
                     setError(null);
                     setIsConnected(true);
+                    retryCount = 0; // 성공하면 재시도 카운트 초기화
                 } catch (e) {
                     setError('Error parsing data: ' + e.message);
                 }
             };
 
             eventSource.onerror = () => {
+                console.error(`연결 실패. ${retryCount + 1}번째 재시도 중...`);
                 setIsConnected(false);
-                setError('Connection failed');
+                setError(`서버 연결 실패. ${retryCount + 1}번째 재시도 중...`);
                 eventSource.close();
-                setTimeout(createEventSource, 5000);
+                retryCount++;
+                setTimeout(createEventSource, retryDelay);
             };
 
             return eventSource;
         };
 
-        const eventSource = createEventSource();
+        const source = createEventSource();
 
         return () => {
-            eventSource.close();
+            if (source) {
+                source.close();
+            }
         };
     }, [url, setSystemInfo, setError, setIsConnected]);
 
