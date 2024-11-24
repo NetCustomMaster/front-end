@@ -127,22 +127,21 @@ export const DashboardPage = () => {
         <Sidebar>
             <Box sx={{ 
                 flexGrow: 1, 
-                p:1,
+                p:0,
                 pr:0,
                 display: 'flex',
                 flexDirection: 'column',
                 height: '470px',
-                overflow: 'hidden'
             }}>
-                <Grid container spacing={1} sx={{ height: '480px', overflow: 'hidden' }}>
+                <Grid container spacing={1} sx={{ height: '470px' }}>
                     {/* Fixed System Info */}
-                    <Grid item xs={6} sx={{ height: '480px' }}>
+                    <Grid item xs={6} sx={{ height: '470px' }}>
                         <Box sx={{ 
-                            p: 1, 
+                           
                             bgcolor: 'background.paper', 
                             borderRadius: 1, 
                             boxShadow: 1,
-                            height: '480px',
+                            height: '470px',
                             overflow: 'hidden'
                         }}>
    

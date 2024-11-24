@@ -34,7 +34,7 @@ const MainContentContainer = styled.div`
     margin-left: ${(props) => (props.$isOpen ? "170px" : props.$isVisible ? "55px" : "10px")};  /* 사이드바가 열렸을 때 main 콘텐츠 위치 */
     transition: margin-left 0.3s ease-in-out;
     height: 480px;
-    overflow-y: hidden;
+    overflow-y: auto;
 `;
 
 const ToggleButton = styled.button`
