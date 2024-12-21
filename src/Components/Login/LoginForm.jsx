@@ -44,7 +44,7 @@ const LoginForm = ({regist}) => {
         e.preventDefault();
         if(regist){
             const fetchData = async () => {
-                const data = await axios.post(`${url}/api/v1/auth/register`,{username:email,password})
+                const data = await axios.post(`${url}/api/v1/auth/register`,{username:email,password,passwordcheck:passwordCheck})
                 console.log(data);
                 if(data.data==="회원가입 완료"){
                     navi("/dashboard")
@@ -118,7 +118,8 @@ const LoginForm = ({regist}) => {
                             setValue={setPassword}
                             inputRef={inputRef} // passwordRef로 변경
                         />
-                        {regist&&                 <CustomTextField
+                        {regist&&
+                          <CustomTextField
                           margin="normal"
                           required
                           fullWidth

@@ -1,0 +1,31 @@
+.hg-row:nth-of-type(5) {
+    /*display:inline-flex;*/
+}
+
+/*space*/
+.hg-button.hg-functionBtn[data-skbtn="{space}"] {
+width:400px;
+}
+/*shift*/
+.hg-button.hg-functionBtn[data-skbtn="{shift}"] {
+    width:50px;
+    }
+/*shift*/
+.hg-button.hg-functionBtn[data-skbtnuid="default-r3b8"] {
+    width:50px;
+    }
+
+
+
+.hg-row:nth-of-type(3) {
+    margin-left:35px;
+    width:700px;
+    justify-content: center;
+}
+
+.hg-rows{
+    justify-content: center;
+    align-items: center;
+}
+
+

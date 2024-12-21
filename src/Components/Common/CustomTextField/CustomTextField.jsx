@@ -1,91 +1,57 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef } from 'react';
 import { TextField, Box } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { activeInputAtom } from '../../recoil/atoms.jsx';
 import CustomKeyboard from '../CustomKeyboard';
-import { keyframes } from '@mui/system';
-
-const blink = keyframes`
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-`;
 
 const CustomTextField = ({
-                             fieldName,
-                             value,
-                             setValue,
-                             ...props
-                         }) => {
+    fieldName,
+    value,
+    setValue,
+    ...props
+}) => {
     const [activeInput, setActiveInput] = useRecoilState(activeInputAtom);
-    const [showKeyboard, setShowKeyboard] = useState(false);
     const inputRef = useRef(null);
 
     const handleFocus = () => {
-        if (activeInput !== fieldName) {
-            setActiveInput(fieldName);
-            setShowKeyboard(true);
+        if (activeInput.fieldName !== fieldName) {
+            setActiveInput({
+                fieldName,
+                value,
+                setValue
+            });
         }
     };
 
-    const handleBlur = () => {
-        setShowKeyboard(false);
-        setActiveInput(null);
-    };
+    const handleClick = () => {
+        setTimeout(() => {
+            if (inputRef.current) {
+                const rect = inputRef.current.getBoundingClientRect();
+                const topOffset = 10;
 
-    useLayoutEffect(() => {
-        if (showKeyboard && activeInput === fieldName && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [showKeyboard, activeInput, fieldName]);
+                window.scrollTo({
+                    top: window.scrollY + rect.top - topOffset,
+                    behavior: 'smooth',
+                });
+
+                setTimeout(() => {
+                    inputRef.current.focus();
+                }, 300);
+            }
+        }, 0);
+    };
 
     return (
-      <Box position="relative">
-          <TextField
-            {...props}
-            inputRef={inputRef}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            sx={{
-                '& .MuiOutlinedInput-root': {
-                    position: 'relative',
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'primary.main',
-                        borderWidth: '2px',
-                    },
-                    '&::after': {
-                        content: "''",
-                        position: 'absolute',
-                        right: 0,
-                        width: '2px',
-                        height: '100%',
-                        backgroundColor: 'black',
-                        animation: `${blink} 1s infinite`,
-                        visibility: activeInput === fieldName ? 'visible' : 'hidden',
-                    },
-                },
-            }}
-          />
-          {showKeyboard && (
-            <Box
-              sx={{
-                  position: 'fixed',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  zIndex: 1000,
-              }}
-            >
-                <CustomKeyboard
-                  value={value}
-                  setValue={setValue}
-                  onClose={() => setShowKeyboard(false)}
-                />
-            </Box>
-          )}
-      </Box>
+        <Box position="relative" sx={{overflow:"visible"}} onClick={handleClick}>
+            <TextField
+                {...props}
+                inputRef={inputRef}
+                onClick={handleClick}
+                onFocus={handleFocus}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+        </Box>
     );
 };
 

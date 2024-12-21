@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useRecoilState } from 'recoil';
 import { showKeyboardAtom } from '../../recoil/atoms.jsx';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import {Box} from "@mui/material";
+import axios, {Axios} from "axios";
 const LayoutContainer = styled.div`
     display: flex;
     height: 100vh;
@@ -29,7 +33,7 @@ const MainContentContainer = styled.div`
     flex-grow: 1;
     margin-left: ${(props) => (props.$isOpen ? "170px" : props.$isVisible ? "55px" : "10px")};  /* 사이드바가 열렸을 때 main 콘텐츠 위치 */
     transition: margin-left 0.3s ease-in-out;
-    height: 100vh;
+    height: 480px;
     overflow-y: auto;
 `;
 
@@ -85,23 +89,26 @@ const Sidebar = ({ children }) => {
         }
     };
 
+
     return (
       <LayoutContainer>
           <SidebarContainer $isOpen={isOpen} $isVisible={(pathname!== "/" && pathname !=="/regist")}>
               <ToggleButton onClick={toggleSidebar} $isOpen={isOpen}>
-                  {isOpen ? "⬅️" : "➡️"}
+                  <MenuIcon sx={{marginLeft:"-10px"}}/>
               </ToggleButton>
               <Menu>
                   <MenuItem>
-                      <div onClick={()=>navi("/dashboard")}> {isOpen ? "🏠 Home" : "🏠"} </div>
+                      <div onClick={()=>navi("/dashboard")}> {isOpen ? <Box sx={{display:"flex"}}><HomeIcon sx={{marginRight:"5px"}}/>
+
+                          Home</Box> :<HomeIcon/>} </div>
                   </MenuItem>
                   <MenuItem>
-                      <div onClick={()=>navi("/setting")}>{isOpen ? <><SettingsIcon />
-                          setting</>: <SettingsIcon/>}</div>
+                      <div onClick={()=>navi("/setting")}>{isOpen ? <Box sx={{display:"flex"}}><SettingsIcon  sx={{marginRight:"5px"}}/>
+                          setting</Box>: <SettingsIcon/>}</div>
                   </MenuItem>
                   <MenuItem>
-                      <div onClick={()=>navi("/chatbot")}>{isOpen ? <><HelpIcon/>
-                          Help</>: <HelpIcon/>}</div>
+                      <div onClick={()=>navi("/chatbot")}>{isOpen ? <Box sx={{display:"flex"}}><HelpIcon sx={{marginRight:"5px"}}/>
+                          Help</Box>: <HelpIcon/>}</div>
                   </MenuItem>
               </Menu>
           </SidebarContainer>
@@ -109,7 +116,7 @@ const Sidebar = ({ children }) => {
             $isOpen={isOpen}
             $isVisible={pathname !== "/"}
             onClick={handleCloseKeyboardAndBlur}
-            style={{height:"480px"}}
+            sx={{height:"480px"}}
           >
               {children}
           </MainContentContainer>

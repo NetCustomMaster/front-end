@@ -10,8 +10,10 @@ export const KeyboardProvider = ({ children }) => {
     const openKeyboard = () => setShowKeyboard(true);
     const closeKeyboard = () => setShowKeyboard(false);
 
+
     return (
-      <KeyboardContext.Provider value={{ showKeyboard, text, setText, activeInput, setActiveInput, openKeyboard, closeKeyboard }}>
+      <KeyboardContext.Provider value={{
+          showKeyboard, text, setText, activeInput, setActiveInput, openKeyboard, closeKeyboard }}>
           {children}
       </KeyboardContext.Provider>
     );
