@@ -51,9 +51,9 @@ export const Setting = () => {
         band,
       });
       console.log(response.data, "data");
-      alert("대역폭가 변경되었습니다.");
+      alert("주파수가 변경되었습니다.");
     } catch (error) {
-      alert("대역폭 설정 중 오류 발생");
+      alert("주파수 설정 중 오류 발생");
       console.error(error);
     }
   };
@@ -77,10 +77,10 @@ export const Setting = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${url}/api/v1/setting/band`);
-        setBand(response.data.toString()); // 현재 설정된 대역폭 값을 상태에 저장
+        setBand(response.data.toString()); // 현재 설정된 주파수 값을 상태에 저장
         console.log(response.data, "data");
       } catch (error) {
-        console.error("대역폭 정보 가져오기 중 오류 발생:", error);
+        console.error("주파수 정보 가져오기 중 오류 발생:", error);
       }
     };
     fetchData();
@@ -102,16 +102,26 @@ export const Setting = () => {
 
   return (
     <Sidebar>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', height: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          height: "100vh",
+          bgcolor: "background.default",
+          color: "text.primary",
+        }}
+      >
         <Typography variant="h5" sx={{ marginBottom: 2, marginTop: 2 }}>
-          설정
+          Setting
         </Typography>
 
         <Grid container spacing={2}>
           {/* 와이파이 설정 */}
           <Grid item xs={12} sx={{ marginTop: "10px" }}>
             <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
-              와이파이 설정
+              Wifi Setting
             </Box>
           </Grid>
           <Grid item xs={12}>
@@ -128,7 +138,7 @@ export const Setting = () => {
           <Grid item xs={12}>
             <CustomTextField
               fullWidth
-              label="와이파이 비밀번호"
+              label="wifi password"
               required
               type="password"
               fieldName="password"
@@ -142,7 +152,7 @@ export const Setting = () => {
             sx={{ margin: "0px auto", marginTop: "20px", padding: "10px 40px" }}
             onClick={updateWifi}
           >
-            적용
+            Apply
           </Button>
 
           {/* 관리자 비밀번호 재설정 */}
@@ -209,15 +219,15 @@ export const Setting = () => {
             적용
           </Button> */}
 
-          {/* 대역폭 설정 */}
+          {/* 주파수 설정 */}
           <Grid item xs={12} sx={{ marginTop: "20px" }}>
             <Box sx={{ fontSize: "20px", borderBottom: "1px solid black" }}>
-              대역폭 설정
+              Frequency Band Setting
             </Box>
           </Grid>
           <Grid item xs={12}>
             <FormControl component="fieldset">
-              <FormLabel component="legend">대역폭</FormLabel>
+              <FormLabel component="legend">Frequency</FormLabel>
               <RadioGroup
                 row
                 aria-label="bandwidth"
@@ -241,10 +251,15 @@ export const Setting = () => {
           </Grid>
           <Button
             variant="contained"
-            sx={{ margin: "0px auto", padding: "10px 40px", marginTop: "20px" , marginBottom:"20px"}} 
+            sx={{
+              margin: "0px auto",
+              padding: "10px 40px",
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}
             onClick={updateBand}
           >
-            적용
+            Apply
           </Button>
         </Grid>
       </Box>
