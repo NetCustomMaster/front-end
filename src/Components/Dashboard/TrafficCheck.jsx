@@ -13,7 +13,8 @@ import { useRecoilValue } from "recoil";
 import { urlAtom } from "../recoil/atoms.jsx";
 
 const STORAGE_KEY = "currentTrafficInfo";
-const FIVE_MINUTES = 300000; // 5분을 밀리초로 표현
+const FIVE_MINUTES = 300000; // 5 minutes in milliseconds
+const MAX_ITEMS = 30; // Maximum number of items to keep in localStorage
 
 const TrafficCheck = ({ update }) => {
   const [trafficHistory, setTrafficHistory] = useState(() => {
@@ -21,7 +22,7 @@ const TrafficCheck = ({ update }) => {
     try {
       const parsedData = JSON.parse(savedData);
       if (Array.isArray(parsedData)) {
-        // 각 항목의 trafficInfos가 배열인지 확인
+        // Ensure each entry's trafficInfos is an array
         return parsedData.map((entry) => ({
           ...entry,
           trafficInfos: Array.isArray(entry.trafficInfos)
@@ -44,28 +45,37 @@ const TrafficCheck = ({ update }) => {
       setTrafficHistory((prev) => {
         const now = Date.now();
         const newTrafficData = update.map((data) => ({
-          // trafficInfos가 배열인지 확인
+          // Ensure trafficInfos is an array
           trafficInfos: Array.isArray(data.trafficInfos)
             ? data.trafficInfos
             : data.trafficInfos?.trafficInfos || [],
           time: now,
         }));
 
+        // Combine previous and new data
         const combinedData = [...prev, ...newTrafficData];
-        const filteredData = combinedData.filter(
+
+        // Filter data to keep only the last 5 minutes
+        let filteredData = combinedData.filter(
           (item) => item.time > now - FIVE_MINUTES
         );
 
-        // 저장 전에 trafficInfos가 배열인지 다시 한 번 확인
-        const sanitizedData = filteredData.map((entry) => ({
+        // Ensure trafficInfos is an array
+        filteredData = filteredData.map((entry) => ({
           ...entry,
           trafficInfos: Array.isArray(entry.trafficInfos)
             ? entry.trafficInfos
             : entry.trafficInfos?.trafficInfos || [],
         }));
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizedData));
-        return sanitizedData;
+        // **New Step:** Limit the number of items to MAX_ITEMS
+        if (filteredData.length > MAX_ITEMS) {
+          filteredData = filteredData.slice(-MAX_ITEMS);
+        }
+
+        // Save the sanitized and limited data to localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredData));
+        return filteredData;
       });
     }
   }, [update]);
