@@ -18,7 +18,22 @@ const FIVE_MINUTES = 300000; // 5분을 밀리초로 표현
 const TrafficCheck = ({ update }) => {
   const [trafficHistory, setTrafficHistory] = useState(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
-    return savedData ? JSON.parse(savedData) : [];
+    try {
+      const parsedData = JSON.parse(savedData);
+      if (Array.isArray(parsedData)) {
+        // 각 항목의 trafficInfos가 배열인지 확인
+        return parsedData.map((entry) => ({
+          ...entry,
+          trafficInfos: Array.isArray(entry.trafficInfos)
+            ? entry.trafficInfos
+            : entry.trafficInfos?.trafficInfos || [],
+        }));
+      }
+      return [];
+    } catch (e) {
+      console.error("Failed to parse trafficHistory from localStorage", e);
+      return [];
+    }
   });
 
   const url = useRecoilValue(urlAtom);
@@ -29,7 +44,10 @@ const TrafficCheck = ({ update }) => {
       setTrafficHistory((prev) => {
         const now = Date.now();
         const newTrafficData = update.map((data) => ({
-          trafficInfos: data.trafficInfos,
+          // trafficInfos가 배열인지 확인
+          trafficInfos: Array.isArray(data.trafficInfos)
+            ? data.trafficInfos
+            : data.trafficInfos?.trafficInfos || [],
           time: now,
         }));
 
@@ -38,8 +56,16 @@ const TrafficCheck = ({ update }) => {
           (item) => item.time > now - FIVE_MINUTES
         );
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredData));
-        return filteredData;
+        // 저장 전에 trafficInfos가 배열인지 다시 한 번 확인
+        const sanitizedData = filteredData.map((entry) => ({
+          ...entry,
+          trafficInfos: Array.isArray(entry.trafficInfos)
+            ? entry.trafficInfos
+            : entry.trafficInfos?.trafficInfos || [],
+        }));
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizedData));
+        return sanitizedData;
       });
     }
   }, [update]);
@@ -48,7 +74,9 @@ const TrafficCheck = ({ update }) => {
   const uniqueIPs = [
     ...new Set(
       trafficHistory.flatMap((entry) =>
-        entry.trafficInfos.map((info) => info.ipAddress).filter(Boolean)
+        Array.isArray(entry.trafficInfos)
+          ? entry.trafficInfos.map((info) => info.ipAddress).filter(Boolean)
+          : []
       )
     ),
   ];
@@ -90,17 +118,36 @@ const TrafficCheck = ({ update }) => {
 
   const getTrafficDataForIP = (ipAddress) => {
     return trafficHistory.map((entry) => {
-      const sentTraffic = entry.trafficInfos.find(
-        (info) => info.ipAddress === ipAddress && info.direction === "sent"
-      );
-      const receivedTraffic = entry.trafficInfos.find(
-        (info) => info.ipAddress === ipAddress && info.direction === "received"
-      );
+      const sentTraffic = Array.isArray(entry.trafficInfos)
+        ? entry.trafficInfos
+            .filter(
+              (info) =>
+                info.ipAddress === ipAddress && info.direction === "sent"
+            )
+            .reduce(
+              (acc, curr) =>
+                acc + convertTrafficToNumber(curr.last2sTraffic || "0"),
+              0
+            )
+        : 0;
+
+      const receivedTraffic = Array.isArray(entry.trafficInfos)
+        ? entry.trafficInfos
+            .filter(
+              (info) =>
+                info.ipAddress === ipAddress && info.direction === "received"
+            )
+            .reduce(
+              (acc, curr) =>
+                acc + convertTrafficToNumber(curr.last2sTraffic || "0"),
+              0
+            )
+        : 0;
 
       return {
         time: entry.time,
-        sent: convertTrafficToNumber(sentTraffic?.last2sTraffic || "0"),
-        received: convertTrafficToNumber(receivedTraffic?.last2sTraffic || "0"),
+        sent: sentTraffic,
+        received: receivedTraffic,
       };
     });
   };

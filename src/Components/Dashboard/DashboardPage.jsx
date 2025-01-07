@@ -145,7 +145,7 @@ export const DashboardPage = () => {
                 overflow: "hidden",
               }}
             >
-              <TrafficCheck />
+              <TrafficCheck update={trafficData} />
               {/* <MockTrafficComponent /> */}
             </Box>
           </Grid>
