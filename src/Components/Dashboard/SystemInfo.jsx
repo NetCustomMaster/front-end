@@ -16,17 +16,17 @@ import {
   internetSpeedState,
 } from "../recoil/atoms.jsx";
 import ReplayIcon from "@mui/icons-material/Replay";
-import useSystemInfoSSE from '../../../hooks/useSystemInfoSSE';
+import useSystemInfoSSE from "../../hooks/useSystemInfoSSE.jsx";
 
 const SystemInfo = () => {
-    const systemInfo = useRecoilValue(systemInfoState);
-    const isConnected = useRecoilValue(isConnectedState);
-    const error = useRecoilValue(errorState);
-    const [internetSpeed, setInternetSpeed] = useRecoilState(internetSpeedState);
-    const [isLoading, setIsLoading] = useState(false);
-    const url = useRecoilValue(urlAtom);
+  const systemInfo = useRecoilValue(systemInfoState);
+  const isConnected = useRecoilValue(isConnectedState);
+  const error = useRecoilValue(errorState);
+  const [internetSpeed, setInternetSpeed] = useRecoilState(internetSpeedState);
+  const [isLoading, setIsLoading] = useState(false);
+  const url = useRecoilValue(urlAtom);
 
-    useSystemInfoSSE();
+  useSystemInfoSSE();
 
   const fetchInternetSpeed = async () => {
     setIsLoading(true);
